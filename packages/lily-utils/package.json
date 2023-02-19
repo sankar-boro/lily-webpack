@@ -1,0 +1,9 @@
+{
+  "name": "lily-utils",
+  "version": "1.0.0",
+  "license": "MIT",
+  "dependencies": {
+    "lily-types": "1.0.0",
+    "lily-query": "1.0.0"
+  }
+}
