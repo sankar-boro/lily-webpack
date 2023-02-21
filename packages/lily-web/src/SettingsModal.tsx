@@ -1,5 +1,8 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { useState } from "react"
 import "./modal.css"
+
+const longText = 'In publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document';
 const initModalCtx = {
     title: "Delete book?",
     body: "body",
@@ -20,16 +23,71 @@ const initNodeData = {
 };
 
 const ssectionNodes = [
-    {title: 'title', body: 'body', identity: 106 }
+    {title: longText, body: longText, identity: 106 }
 ]
 const sectionNodes = [
-    {title: 'title', body: 'body', identity: 105, child: [], uniqueId: 1 },
-    {title: 'title', body: 'body', identity: 105, child: ssectionNodes, uniqueId: 2 },
+    {title: longText, body: longText, identity: 105, child: [], uniqueId: 1 },
+    {title: longText, body: longText, identity: 105, child: ssectionNodes, uniqueId: 2 },
 ]
 const createData = (x: any) => {
-    return {sm: x, lg: `${x.charAt(0).toUpperCase()}${x.slice(1)}`}
+    return {methodSm: x, methodLg: `${x.charAt(0).toUpperCase()}${x.slice(1)}`}
 }
 
+const ButtonComponents = ({ cName, actions, bName }: any) => {
+    return <div className="modal-button-container">
+        <button onClick={() => {actions.mainAction()}} className={`button button-${cName} margin-right-10`}>
+            {bName}
+        </button>
+        <button className="button button-cancel" onClick={() => {actions.cancelAction()}}>
+            Cancel
+        </button>
+    </div>
+}
+
+const LogsComponent = ({topNode, botNode}: any) => {
+    return <div className="modal-logs">
+        <div className="sm-txt">
+            <span>Logs</span>
+        </div>
+        {topNode && <>
+            <div className="top-node">
+                <div>&#8593; {topNode.title} <span> {topNode.identity}</span></div>
+            </div>
+        </>}
+        {botNode && <>
+            <div className="bot-node">
+                <div>&#8595; {botNode.title} <span>{botNode.identity}</span></div>
+            </div>
+        </>}
+    </div>
+}
+
+const SectionNodesComponent = ({node}: any) => {
+    return <div className="modal-sectionChildNodes-con">
+        {
+            node.child && node.child.map((nnnode: any) => {
+                return <div className="modal-ssectionNode" key={nnnode.uniqueId}>
+                    <div>{nnnode.title} <span> . {nnnode.identity}</span></div>
+                </div>  
+            })
+        }
+    </div>
+}
+
+const ChildNodesComponent = ({childNodes}: any) => {
+    return <div className="modal-childNodes-con">
+    {
+        childNodes.map((nnode: any) => {
+            return <div key={nnode.uniqueId}>
+                <div className="modal-sectionNode">
+                    <div>{nnode.title}<span> . {nnode.identity}</span></div>
+                </div>
+                <SectionNodesComponent node={nnode} />
+            </div>
+        })
+    }
+    </div>
+}
 export const SettingsModal = () => {
     const [modalCtx] = useState<any>(initModalCtx);
     const [node] = useState(initNodeData);
@@ -39,64 +97,31 @@ export const SettingsModal = () => {
 
     const contentStyles = 'warning';
     const ti = 'warning';
-    const {sm, lg} = createData(modalCtx.data.method);
+    const {methodSm, methodLg} = createData(modalCtx.data.method);
     return <div className="modal">
         <div className="modal-container">
             <div className="modal-body">
+                
                 <div className={`modal-title ${ti}`}>
                     <span>{modalCtx.title}</span>
                 </div>
+                
                 <div className={`modal-content ${contentStyles}`}>
-                    <div className="sm-txt"><span>{modalCtx.warningTitle}</span></div>
-                    <div className="page-del-styles">
-                        <span>{node.title}, {node.identity}</span>
+                    <div className="modal-warning-txt">
+                        <span>{modalCtx.warningTitle}</span>
                     </div>
-                    {
-                        childNodes.map((nnode: any) => {
-                            return <div style={{ marginLeft: 5 }} key={nnode.uniqueId}>
-                                <div className="section-del-styles">
-                                    <span>{nnode.title}, {nnode.identity}</span>
-                                </div>
-                                <div style={{ marginLeft: 10}}>
-                                    {
-                                        nnode.child && nnode.child.map((nnnode: any) => {
-                                            return <div className="ssection-del-styles" key={nnnode.uniqueId}>
-                                                <span>{nnnode.title}, {nnnode.identity}</span>
-                                            </div>  
-                                        })
-                                    }
-                                </div>
-                            </div>
-                        })
-                    }
-                </div>
-                <div className="gap"/>
-                <div className="modal-logs">
-                    <div className="sm-txt">
-                        <span>Logs</span>
+                    <div className="modal-mainNode">
+                        <div className="title">{node.title}<span> . {node.identity}</span></div>
                     </div>
-                    {topNode && <>
-                        <div className="top-node">
-                            Top: <span>{topNode.title}, {topNode.identity}</span>
-                        </div>
-                    </>}
-                    {botNode && <>
-                        <div className="bot-node">
-                            Bottom: <span>{botNode.title}, {botNode.identity}</span>
-                        </div>
-                    </>}
+                    <ChildNodesComponent childNodes={childNodes} />
                 </div>
-                <div className="gap"/>
-                <div className="modal-button-container">
-                    <button onClick={() => {
-                        modalCtx.actions.mainAction();
-                    }} className={`button button-${sm} margin-right-10`}>
-                        {lg}
-                    </button>
-                    <button className="button button-cancel">
-                        Cancel
-                    </button>
-                </div>
+
+                <LogsComponent topNode={topNode} botNode={botNode} />
+                <ButtonComponents 
+                    actions={modalCtx.actions}
+                    cName={methodSm}
+                    bName={methodLg}
+                />
             </div>
         </div>
     </div>

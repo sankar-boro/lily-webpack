@@ -1,7 +1,7 @@
 import React from "react";
 import { createRoot } from 'react-dom/client';
 // import { App } from "./App";
-import { SettingsModal } from "./SettingsModal";
+import { StylesModal } from "./StylesModal";
 import { BrowserRouter } from "react-router-dom";
 
 import "./index.css"
@@ -12,7 +12,7 @@ const root = createRoot(container); // createRoot(container!) if you use TypeScr
 root.render(
     <React.StrictMode>
         <BrowserRouter>
-            <SettingsModal />
+            <StylesModal />
         </BrowserRouter>
     </React.StrictMode>
 );

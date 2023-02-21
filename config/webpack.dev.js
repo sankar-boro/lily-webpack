@@ -10,7 +10,7 @@ module.exports = {
     hot: true,
     open: true,
     host: process.env.HOST,
-    port: 3000,
+    port: 2000,
     historyApiFallback: true,
     allowedHosts: 'all'
   },
